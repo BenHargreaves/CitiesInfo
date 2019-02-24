@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc.Formatters;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
+using NLog.Extensions.Logging;
 
 namespace CityInfo.API
 {
@@ -21,11 +22,22 @@ namespace CityInfo.API
                 .AddMvcOptions(o => o.OutputFormatters.Add(
                     new XmlDataContractSerializerOutputFormatter()))
                 ;
+
+            services.AddLogging(loggingBuilder =>
+            {
+                loggingBuilder.AddConsole();
+                loggingBuilder.AddDebug();
+
+                //loggingBuilder.AddProvider(new NLog.Extensions.Logging.NLogLoggerProvider());
+                loggingBuilder.AddNLog();
+
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env)
-        {
+        {           
+
             if (env.IsDevelopment())
             {
                 app.UseDeveloperExceptionPage();
